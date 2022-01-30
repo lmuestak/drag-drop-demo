@@ -1,0 +1,105 @@
+﻿<Window 
+    x:Class="DragDropDemo.Views.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dd="urn:gong-wpf-dragdrop"
+    mc:Ignorable="d"
+    DataContext="{Binding}"
+    Title="Drag And Drop Demo">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="400*"/>
+        </Grid.ColumnDefinitions>
+
+        <TreeView 
+            dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
+            dd:DragDrop.DragHandler="{Binding}"
+            dd:DragDrop.DropHandler="{Binding}"
+            dd:DragDrop.UseDefaultDragAdorner="True"
+            dd:DragDrop.UseDefaultEffectDataTemplate="True"
+            dd:DragDrop.SelectDroppedItems="True"
+            x:Name="tvFolders"
+            Grid.Column="0" 
+            DataContext="{Binding}" 
+            ItemsSource="{Binding Items}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Folders}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="0" Source="{Binding Path=Icon}" SnapsToDevicePixels="True" DockPanel.Dock="Left" Width="16" Height="16">
+                        </Image>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Setter Property="ToolTip" Value="{Binding Path}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
+        <ListView 
+           dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
+            dd:DragDrop.DragHandler="{Binding}"
+            dd:DragDrop.DropHandler="{Binding}"
+            dd:DragDrop.UseDefaultDragAdorner="True"
+            dd:DragDrop.UseDefaultEffectDataTemplate="True"
+            dd:DragDrop.SelectDroppedItems="True"
+            ItemsSource="{Binding ElementName=tvFolders, Path=SelectedItem.Folders}"
+            Grid.Column="2" 
+            VerticalAlignment="Stretch" 
+            HorizontalAlignment="Stretch">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="Height" Value="Auto"></Setter>
+                            <Setter Property="Padding" Value="10, 2"></Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+                    <GridView.Columns>
+                        <GridViewColumn  Header="Name" Width="260">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Width="Auto">
+                                        <Image Margin="0" Source="{Binding Path=Icon}" SnapsToDevicePixels="True" DockPanel.Dock="Left" Width="16" Height="16" >
+                                        </Image>
+                                        <TextBlock Text="{Binding Name}" Margin="1,0"></TextBlock>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn  Header="Path" Width="260">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <DockPanel Width="Auto">
+                                        <TextBlock Text="{Binding Path}" Margin="1,0"></TextBlock>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+    </Grid>
+</Window>
+
+    
